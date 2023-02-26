@@ -1,9 +1,7 @@
 <?php
 function keyboard($rows): string {
   return json_encode([
-      "resize_keyboard" => true,
-      "is_persistent" => true,
-      "keyboard" => $rows
+      "inline_keyboard" => $rows
   ], true);
 }
 
