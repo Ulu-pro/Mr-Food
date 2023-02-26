@@ -1,0 +1,17 @@
+/*noinspection CssUnresolvedCustomProperty*/
+:root {
+ --bg: var(--tg-theme-bg-color);
+ --text: var(--tg-theme-text-color);
+ --hint: var(--tg-theme-hint-color);
+ --secondary-bg: var(--tg-theme-secondary-bg-color);
+}
+* {
+ font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+body {
+ background: var(--bg);
+ color: var(--text);
+}
+button {
+ cursor: pointer;
+}
