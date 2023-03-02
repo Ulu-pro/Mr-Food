@@ -5,6 +5,7 @@ class Text {
 Ajoyib tushlikka buyurtma bering!
 ";
   const START_BUTTON = "Buyurtma berish";
+  const BUTTON_TOTAL_ORDER = "JAMI BUYURTMA";
   const PING = "Pong!";
   const HELP = "
 ❓ *Buyruqlar*:\n
