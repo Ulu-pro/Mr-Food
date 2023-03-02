@@ -11,40 +11,25 @@ class DB {
     );
   }
 
-  public function select($table, $callback) {
-    $quoted_table = "`$table`";
-    $result = $this->db->query("SELECT * FROM $quoted_table");
-    if ($result->num_rows > 0) {
-      while ($row = $result->fetch_assoc()) {
-        $callback(Tables::parse($table, $row));
-      }
+  public function menu_list($callback) {
+    $result = $this->db->query("
+        SELECT
+               `product`.product_id,
+               `product`.product_name,
+               `product_type`.product_type_name,
+               `product_type`.product_type_price
+        FROM `product`, `product_type`
+        WHERE `product`.product_id = `product_type`.product_id
+        ORDER BY `product`.product_id
+    ");
+    while ($row = $result->fetch_assoc()) {
+      $callback(
+          $row["product_id"],
+          $row["product_name"],
+          $row["product_type_name"],
+          $row["product_type_price"],
+      );
     }
-  }
-}
-
-class Tables {
-  const CATEGORY = "category";
-  const PRODUCT = "product";
-  const PRODUCT_TYPE = "product_type";
-
-  public static function parse($table, $object): array {
-    return match ($table) {
-      self::CATEGORY => [
-          $object["category_id"],
-          $object["category_name"]
-      ],
-      self::PRODUCT => [
-          $object["product_id"],
-          $object["category_id"],
-          $object["product_name"]
-      ],
-      self::PRODUCT_TYPE => [
-          $object["product_type_id"],
-          $object["product_id"],
-          $object["product_type_price"]
-      ],
-      default => [],
-    };
   }
 }
 
