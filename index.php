@@ -7,7 +7,7 @@ require "db.php";
 
 $bot = new Bot(Env::TOKEN);
 $data = $bot->getData();
-$app = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]/app/";
+$app = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]app/";
 file_put_contents("log.txt", json_encode($data, true)."\n", FILE_APPEND);
 
 $message = $data["message"];
