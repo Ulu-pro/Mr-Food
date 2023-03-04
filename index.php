@@ -1,6 +1,5 @@
 <?php
 require "bot.php";
-require "env.php";
 require "text.php";
 require "types.php";
 require "db.php";
