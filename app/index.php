@@ -1,5 +1,4 @@
 <?php
-require "../env.php";
 require "../text.php";
 require "../db.php";
 if (!isset($db)) exit;
@@ -8,8 +7,7 @@ if (!isset($db)) exit;
 <html lang="uz">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Mister Food</title>
   <link rel="stylesheet" href="style.css?<?php echo time() ?>">
@@ -17,14 +15,14 @@ if (!isset($db)) exit;
 <body>
 <section class="menu">
   <?php
-  $db->menu_list(function ($id, $name, $type, $price) {
+  $db->product_list(function ($id, $name, $type_id, $type_name, $price) {
     echo "
-  <div class='card'>
+  <div class='card' data-type-id='$type_id' data-type-price='$price'>
     <div class='quantity'>0</div>
     <img class='image' src='images/$id.jpg' alt='$name'>
     <div class='name'>$name</div>
-    <div class='type'>$type</div>
-    <div class='price'>$price UZS</div>
+    <div class='type'>$type_name</div>
+    <div class='price'></div>
     <div class='counters'>
       <button class='counter-minus'>-</button>
       <button class='counter-plus'>+</button>
@@ -34,11 +32,38 @@ if (!isset($db)) exit;
   });
   ?>
 </section>
+<section class="order">
+  <h1 class="header"><?php echo Text::ORDER_HEADER ?></h1>
+  <span class="edit"><?php echo Text::ORDER_EDIT ?></span>
+  <div class="items">
+    <?php
+    $db->product_list(function ($id, $name, $type_id, $type_name) {
+      echo "
+    <div class='item' data-item-id='$type_id'>
+      <img class='image' src='images/$id.jpg' alt='$name'>
+      <span class='name'>$name
+        <span class='quantity'></span>
+      </span>
+      <div class='type'>$type_name</div>
+      <div class='price'></div>
+    </div>
+      ";
+    });
+    ?>
+  </div>
+  <input id="comment" type="text" class="comment" placeholder="<?php echo Text::ORDER_COMMENT_PLACEHOLDER ?>">
+  <label for="comment" class="comment-label"><?php echo Text::ORDER_COMMENT_DESCRIPTION ?></label>
+</section>
 <script src="https://telegram.org/js/telegram-web-app.js?0"></script>
 <!--suppress JSUnresolvedVariable-->
 <script>
-let App = window.Telegram.WebApp;
-App.MainButton.text = "<?php echo Text::BUTTON_TOTAL_ORDER ?>";
+const App = window.Telegram.WebApp;
+const total_order_text = "<?php echo Text::BUTTON_TOTAL_ORDER ?>";
+App.MainButton.text = total_order_text;
+function formattedPrice(price) {
+  return "<?php echo Text::BUTTON_PAY_ORDER ?>".replace(
+      '%s', parseInt(price).toLocaleString('uz-UZ'));
+}
 </script>
 <script src="script.js?<?php echo time() ?>"></script>
 </body>
