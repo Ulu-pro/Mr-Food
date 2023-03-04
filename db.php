@@ -1,4 +1,5 @@
 <?php
+require "env.php";
 class DB {
   private mysqli $db;
 
@@ -11,11 +12,12 @@ class DB {
     );
   }
 
-  public function menu_list($callback) {
+  public function product_list($callback) {
     $result = $this->db->query("
         SELECT
                `product`.product_id,
                `product`.product_name,
+               `product_type`.product_type_id,
                `product_type`.product_type_name,
                `product_type`.product_type_price
         FROM `product`, `product_type`
@@ -26,6 +28,7 @@ class DB {
       $callback(
           $row["product_id"],
           $row["product_name"],
+          $row["product_type_id"],
           $row["product_type_name"],
           $row["product_type_price"],
       );
