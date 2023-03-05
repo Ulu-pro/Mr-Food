@@ -55,10 +55,11 @@ if (!isset($db)) exit;
   <label for="comment" class="comment-label"><?php echo Text::ORDER_COMMENT_DESCRIPTION ?></label>
 </section>
 <script src="https://telegram.org/js/telegram-web-app.js?0"></script>
-<!--suppress JSUnresolvedVariable-->
+<!--suppress JSUnresolvedVariable,JSUnresolvedFunction-->
 <script>
 const App = window.Telegram.WebApp;
 const total_order_text = "<?php echo Text::BUTTON_TOTAL_ORDER ?>";
+App.expand();
 App.MainButton.text = total_order_text;
 function formattedPrice(price) {
   return "<?php echo Text::BUTTON_PAY_ORDER ?>".replace(
