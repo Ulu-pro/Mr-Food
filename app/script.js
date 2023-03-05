@@ -5,6 +5,7 @@ const order = document.querySelector('.order');
 const cards = document.querySelectorAll('.card');
 const items = document.querySelectorAll('.item');
 const edit = document.querySelector('.edit');
+const comment = document.querySelector('.comment');
 
 cards.forEach(card => {
   const plus = card.querySelector('.counter-plus');
@@ -72,13 +73,21 @@ App.MainButton.onClick(() => {
     renderSelectedItems(order_items);
   }
   else if (window.getComputedStyle(order, null).display === 'block') {
-    // TODO: order is ok (ultimate), process to api
-    alert(JSON.stringify(order_items));
     const order_data = {
       chat_id: App.initDataUnsafe.user.id,
+      comment: comment.value,
       order_items: order_items
     };
-    apiOrderData(order_data);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '../', true);
+    xhr.send(JSON.stringify(order_data));
+    xhr.onload = () => {
+      if (xhr.status !== 200) {
+        alert(`Error: ${xhr.status}`);
+        return;
+      }
+      App.close();
+    }
   }
 });
 
@@ -120,18 +129,4 @@ function renderSelectedItems(order_items) {
     price.innerText = formattedPrice(item.price);
     order_item.style.display = 'block';
   });
-}
-
-function apiOrderData(order_data) {
-  /*fetch('api.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(order_data)
-  })
-      .then(response => response.json())
-      .then(_ => {
-        // alert(data);
-      });*/
 }
