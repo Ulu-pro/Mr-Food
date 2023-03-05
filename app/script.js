@@ -4,7 +4,7 @@ const menu  = document.querySelector('.menu');
 const order = document.querySelector('.order');
 const cards = document.querySelectorAll('.card');
 const items = document.querySelectorAll('.item');
-const edit = document.querySelector('.edit');
+const edit  = document.querySelector('.edit');
 const comment = document.querySelector('.comment');
 
 cards.forEach(card => {
