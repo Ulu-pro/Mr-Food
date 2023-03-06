@@ -17,17 +17,42 @@ class Bot {
     }
   }
 
-  public function request($method, $params): bool|string {
-    return file_get_contents($this->url . $method . "?" . http_build_query($params));
+  public function request($method, $params) {
+    $_ = file_get_contents($this->url . $method . "?" . http_build_query($params));
+    file_put_contents('log.txt', json_encode($params)."\n", FILE_APPEND);
+    unset($_);
   }
 
   public function sendMessage($chat_id, $text, $reply_markup = []) {
-    $_ = $this->request("sendMessage", [
+    $this->request("sendMessage", [
         "chat_id" => $chat_id,
         "text" => $text,
         "parse_mode" => "Markdown",
         "reply_markup" => $reply_markup
     ]);
-    unset($_);
+  }
+
+  public function sendInvoice(
+      $chat_id, $title, $description, $payload, $provider_token, $currency, $prices,
+      $start_parameter, $photo_url, $photo_size, $photo_width, $photo_height, $reply_markup = []
+  ) {
+    $this->request("sendInvoice", [
+        "chat_id" => $chat_id,
+        "title" => $title,
+        "description" => $description,
+        "payload" => $payload,
+        "provider_token" => $provider_token,
+        "currency" => $currency,
+        "prices" => $prices,
+        "start_parameter" => $start_parameter,
+        "photo_url" => $photo_url,
+        "photo_size" => $photo_size,
+        "photo_width" => $photo_width,
+        "photo_height" => $photo_height,
+        "need_name" => true,
+        "need_phone_number" => true,
+        "need_shipping_address" => true,
+        "reply_markup" => $reply_markup
+    ]);
   }
 }
