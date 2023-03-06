@@ -12,7 +12,10 @@ Ajoyib tushlikka buyurtma bering!
   const ORDER_COMMENT_PLACEHOLDER = "Izoh qoldirish...";
   const ORDER_COMMENT_DESCRIPTION =
       "Maxsus so'rovlar, tafsilotlarlar uchun";
-  const PING = "Pong!";
+  const INVOICE_TITLE = "Buyurtma #%s";
+  const INVOICE_DESCRIPTION =
+      "Buyurtmani to'lash uchun tugmani bosing";
+  const ORDER_ITEM_FORMAT = "%s %s x%s";
   const HELP = "
 ❓ *Buyruqlar*:\n
 /start - `yangi buyurtma berish`
