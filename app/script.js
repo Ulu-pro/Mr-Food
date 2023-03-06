@@ -73,10 +73,17 @@ App.MainButton.onClick(() => {
     renderSelectedItems(order_items);
   }
   else if (window.getComputedStyle(order, null).display === 'block') {
+    let items = [];
+    order_items.forEach(item => {
+      items.push({
+        type_id: item.id,
+        quantity: item.quantity
+      });
+    });
     const order_data = {
       chat_id: App.initDataUnsafe.user.id,
       comment: comment.value,
-      order_items: order_items
+      order_items: items
     };
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '../', true);
