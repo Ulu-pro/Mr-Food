@@ -3,46 +3,68 @@ require "bot.php";
 require "text.php";
 require "types.php";
 require "db.php";
+if (!isset($db)) exit;
 
 $bot = new Bot(Env::TOKEN);
 $data = $bot->getData();
 $app = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]app/";
-file_put_contents("log.txt", json_encode($data, true)."\n", FILE_APPEND);
+file_put_contents("log.txt", json_encode($data)."\n", FILE_APPEND);
 
-$message = $data["message"];
-$chat_id = $message["chat"]["id"];
-$text = $message["text"];
+if (isset($data["order_items"])) {
+  $chat_id = $data["chat_id"];
+  $comment = $data["comment"];
+  $order_items = $data["order_items"];
+  $purchase = [];
+  $total_price = 0;
 
-function keyboard_markup($message, $inline, $url) {
-  global $bot, $chat_id;
-  $bot->sendMessage($chat_id, $message, keyboard([
-      [
-          button($inline, $url)
-      ]
-  ]));
-}
+  foreach ($order_items as $item) {
+    $type_id = $item["type_id"];
+    $quantity = $item["quantity"];
+    [$product_name, $type_name, $type_price] =
+        $db->get_product_type($type_id);
+    $price = $quantity * $type_price;
+    $total_price += $price;
+    $purchase[] = labeledPrice(sprintf(Text::ORDER_ITEM_FORMAT,
+      $product_name, $type_name, $quantity), $price * Env::DECIMAL);
+  }
 
-switch (substr($text, 1)) {
-  case "start":
-    keyboard_markup(
-        Text::START,
-        Text::START_BUTTON,
-        $app
-    );
-    break;
-  case "orders":
-    // TODO: show orders page of chat_id
-    keyboard_markup(
-        "Order",
-        "Button",
-        $app
-    );
-    break;
-  case "ping":
-    if (in_array($chat_id, Env::ADMIN_ID)) {
-      $bot->sendMessage($chat_id, Text::PING);
-    }
-    break;
-  default:
-    $bot->sendMessage($chat_id, Text::HELP);
+  // TODO: create order and get it's id
+  $bot->sendInvoice(
+      $chat_id,
+      sprintf(Text::INVOICE_TITLE, "0"),
+      Text::INVOICE_DESCRIPTION,
+      "invoice-payload",
+      Env::PROVIDERS["CLICK"],
+      Env::CURRENCY,
+      json_encode($purchase, JSON_HEX_TAG),
+      "pay-order",
+      $app . Env::PHOTO_NAME,
+      Env::PHOTO_SIZE,
+      Env::PHOTO_DIMENSIONS["W"],
+      Env::PHOTO_DIMENSIONS["H"],
+      keyboard([
+          [
+              button(
+                  sprintf(Text::BUTTON_PAY_ORDER,
+                      number_format($total_price, log10(Env::DECIMAL),
+                          ",", " ")
+              ), null, true)
+          ]
+      ])
+  );
+} else {
+  $message = $data["message"];
+  $chat_id = $message["chat"]["id"];
+
+  switch (substr($message["text"], 1)) {
+    case "start":
+      $bot->sendMessage($chat_id, Text::START, keyboard([
+          [
+              button(Text::START_BUTTON, $app)
+          ]
+      ]));
+      break;
+    default:
+      $bot->sendMessage($chat_id, Text::HELP);
+  }
 }
