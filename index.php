@@ -74,7 +74,7 @@ else if (isset($data["callback_query"])) {
       $order_id, price_format($amount, 0),
       $name, $phone, $address);
   $inline = keyboard([
-      more_details_row($app, $order_id, $chat_id)
+      more_details_row($app, $order_id, $owner_id)
   ]);
 
   $db->delivered_order($order_id);

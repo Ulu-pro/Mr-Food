@@ -35,7 +35,7 @@ if ($user_id != $owner_id) exit;
   <div class="items">
     <?php
     $db->order_items($order_id, function ($type_id, $quantity, $name, $type_name, $price) {
-      $price = price_format($price, 0);
+      $price = price_format($quantity * $price, 0);
       echo "
     <div class='item'>
       <img class='image' src='images/$type_id.jpg' alt='$name $type_name'>
