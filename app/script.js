@@ -127,7 +127,7 @@ function orderTotalPrice(order_items) {
 function renderSelectedItems(order_items) {
   items.forEach(item => {
     item.style.display = 'none';
-  })
+  });
   order_items.forEach(item => {
     const order_item = document.querySelector(`[data-item-id="${item.id}"]`);
     const quantity = order_item.querySelector('.quantity');
