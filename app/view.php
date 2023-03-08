@@ -11,8 +11,7 @@ $user_id = $db->get_user_id($chat_id);
 [$owner_id, $comment, $status_code] =
     $db->get_order_info($order_id);
 
-if ($user_id != $owner_id or
-    !in_array($chat_id, Env::ADMIN_ID)) {
+if ($user_id != $owner_id) {
   exit;
 }
 ?>
