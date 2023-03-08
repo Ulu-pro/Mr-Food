@@ -4,22 +4,22 @@ require "../db.php";
 if (!isset($db)) exit;
 ?>
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Mister Food</title>
-  <link rel="stylesheet" href="style.css?<?php echo time() ?>">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <section class="menu">
   <?php
-  $db->product_list(function ($id, $name, $type_id, $type_name, $price) {
+  $db->product_list(function ($name, $type_id, $type_name, $price) {
     echo "
   <div class='card' data-type-id='$type_id' data-type-price='$price'>
     <div class='quantity'>0</div>
-    <img class='image' src='images/$id.jpg' alt='$name'>
+    <img class='image' src='images/$type_id.jpg' alt='$name'>
     <div class='name'>$name</div>
     <div class='type'>$type_name</div>
     <div class='price'></div>
@@ -37,10 +37,10 @@ if (!isset($db)) exit;
   <span class="edit"><?php echo Text::ORDER_EDIT ?></span>
   <div class="items">
     <?php
-    $db->product_list(function ($id, $name, $type_id, $type_name) {
+    $db->product_list(function ($name, $type_id, $type_name) {
       echo "
     <div class='item' data-item-id='$type_id'>
-      <img class='image' src='images/$id.jpg' alt='$name'>
+      <img class='image' src='images/$type_id.jpg' alt='$name'>
       <span class='name'>$name
         <span class='quantity'></span>
       </span>
@@ -63,9 +63,9 @@ App.expand();
 App.MainButton.text = total_order_text;
 function formattedPrice(price) {
   return "<?php echo Text::BUTTON_PAY_ORDER ?>".replace(
-      '%s', parseInt(price).toLocaleString('uz-UZ'));
+      '%s', parseInt(price).toLocaleString('ru-RU'));
 }
 </script>
-<script src="script.js?<?php echo time() ?>"></script>
+<script src="script.js"></script>
 </body>
 </html>
