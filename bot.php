@@ -19,13 +19,22 @@ class Bot {
 
   public function request($method, $params) {
     $_ = file_get_contents($this->url . $method . "?" . http_build_query($params));
-    file_put_contents('log.txt', json_encode($params)."\n", FILE_APPEND);
     unset($_);
   }
 
   public function sendMessage($chat_id, $text, $reply_markup = []) {
     $this->request("sendMessage", [
         "chat_id" => $chat_id,
+        "text" => $text,
+        "parse_mode" => "Markdown",
+        "reply_markup" => $reply_markup
+    ]);
+  }
+
+  public function editMessageText($chat_id, $message_id, $text, $reply_markup = []) {
+    $this->request("editMessageText", [
+        "chat_id" => $chat_id,
+        "message_id" => $message_id,
         "text" => $text,
         "parse_mode" => "Markdown",
         "reply_markup" => $reply_markup
@@ -53,6 +62,24 @@ class Bot {
         "need_phone_number" => true,
         "need_shipping_address" => true,
         "reply_markup" => $reply_markup
+    ]);
+  }
+
+  public function answerPreCheckoutQuery($query_id, $ok, $error = "") {
+    $array = [
+        "pre_checkout_query_id" => $query_id,
+        "ok" => true
+    ];
+    if (!$ok) {
+      $array["ok"] = false;
+      $array["error_message"] = $error;
+    }
+    $this->request("answerPreCheckoutQuery", $array);
+  }
+
+  public function answerCallbackQuery($query_id) {
+    $this->request("answerCallbackQuery", [
+        "callback_query_id" => $query_id
     ]);
   }
 }
